@@ -1,12 +1,10 @@
 import Link from "next/link";
-import StudentInfo from "./StudentInfo";
 
 export default function Home() {
   return (
     <main>
-    <h1 style={headingStyle}>CPRG 306: Web Development 2 - Assignments</h1>
-    <StudentInfo />
-    <div style={paragraphStyle}>
+    <h1>CPRG 306: Web Development 2 - Assignments</h1>
+    <div>
       <ul>
           <li>
             <p>
@@ -21,6 +19,11 @@ export default function Home() {
           <li>
             <p>
               <Link href="/week-3">Week 3</Link>
+            </p>
+          </li>
+          <li>
+            <p>
+              <Link href="/week-4">Week 4</Link>
             </p>
           </li>
       </ul>
