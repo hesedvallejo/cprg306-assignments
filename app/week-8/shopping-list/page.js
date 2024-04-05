@@ -1,31 +1,49 @@
 "use client";
-import { useUserAuth } from "./_utils/auth-context";
-import { Link } from "react-router-dom";
 
-export default function LandingPage() {
-  const { user, gitHubSignIn, firebaseSignOut } = useUserAuth();
+import React, { useState } from 'react';
+import NewItem from './new-item'; 
+import ItemList from './item-list';
+import itemsData from './item.json';
+import MealIdeas from './meal-ideas'; 
 
-  const handleLoginClick = () => {
-    gitHubSignIn();
+export default function Page() {
+  const [items, setItems] = useState(itemsData);
+  const [selectedItemName, setSelectedItemName] = useState("");
+
+  const handleAddItem = (newItem) => {
+    setItems([...items, newItem]);
   };
 
-  const handleLogoutClick = () => {
-    firebaseSignOut();
+  const handleItemSelect = (item) => {
+    let itemName;
+    let cleanName;
+
+    if (item.name.includes(",")) {
+      itemName = item.name.split(",");
+      cleanName = itemName[0].trim();
+    } else {
+      itemName = item.name.split(" ");
+      cleanName = itemName[0].trim();
+    }
+    let withOutEmoji = cleanName.replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
+    setSelectedItemName(withOutEmoji);
+
   };
 
   return (
-    <div>
-      {user ? (
-        <div>
-          <p>
-            Welcome, {user.displayName} ({user.email})
-          </p>
-          <button onClick={handleLogoutClick}>Logout</button>
-          <Link to="/shopping-list">Go to Shopping List</Link>
+    <main className="flex min-h-screen flex-col justify-between p-10">
+      <h2 className="ml-4 text-3xl font-bold text-black">Shopping List</h2>
+      <div className="mt-4 ml-4">
+        <NewItem onAddItem={handleAddItem} />
+      </div>
+      <div className="mt-4 flex">
+        <div className="w-1/2">
+        <ItemList items={items} onItemSelect={handleItemSelect} />
         </div>
-      ) : (
-        <button onClick={handleLoginClick}>Login with GitHub</button>
-      )}
-    </div>
+        <div className="w-1/2">
+          <MealIdeas ingredient={selectedItemName} />
+        </div>
+      </div>
+    </main>
   );
 }
